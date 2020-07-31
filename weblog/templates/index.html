@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/wtf.html' import quick_form %}
+{% from '_macros.html' import render_pagination %}
+
+{% block title %}Weblog{% endblock %}
+
+{% block page_content %}
+  <div class='page-header'>
+    <h1>Hello {% if current_user.name %}{{ current_user.name }}{% else %}Stranger{% endif %}</h1>
+  </div>
+  <!-- 渲染编辑博客的表单 START -->
+  <div>
+    {{ quick_form(form) }}
+  </div><br><br>
+  <!-- 渲染编辑博客的表单 END -->
+  <!-- 如果当前用户已登录 -->
+  {% if current_user.is_authenticated %}
+    <div class='post-tabs'>
+      <ul class='nav nav-tabs'>
+        <!-- 如果现在是查看全部，就把「查看全部」字样设为不高亮 --> 
+        <!-- 默认高亮，class='active' 表示不高亮 -->
+        <!-- 也就是这个链接随时可以点，点了就是查看全部，区别在于高亮与否 -->
+        <li {% if not show_followed %}class='active'{% endif %}>
+          <a href="{{ url_for('main.show_all_blogs') }}">查看全部</a>
+        </li>
+        <li {% if show_followed %}class='active'{% endif %}>
+          <a href="{{ url_for('main.show_followed_blogs') }}">只看你关注的</a>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+  <!-- 显示本页博客列表 -->
+  {% include '_blogs.html' %}   
+  <!-- 显示分页 -->
+  {{ render_pagination(pagination, 'main.index') }}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <!-- Markdown 预览是由 Flask-PageDown 模块支持的，加入此模板宏即可实现 -->
+  {{ pagedown.include_pagedown() }}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_pagination %}
+
+{% block title %}Moderate Comments{% endblock %}
+
+{% block page_content %}
+  <div class='page-header'>
+    <h1>Moderate Comments</h1>
+    <br><hr>
+  </div>
+  {% include '_comments.html' %}
+  {{ render_pagination(pagination, 'front.moderate_comments') }}
+{% endblock %}

@@ -1,0 +1,13 @@
+Dear {{ user.name }}, 
+
+Wecome to Weblog!
+
+To confirm your account please click on the following link:
+
+{{ url_for('main.confirm_user', token=token, _external=True) }}
+
+Sincerely,
+
+The Weblog Team
+
+Note: replies to this email address are invalid.

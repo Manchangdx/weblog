@@ -1,0 +1,64 @@
+<!-- style>
+.post-content {
+  margin-top: 10px;
+}
+</style -->
+
+<ul class='posts'>
+  {%- for blog in blogs -%}
+    <li class='post' style="list-style-type:none; padding-bottom: 1px;">
+      <div class='row'>
+        <div class='col-md-1'>
+          <!-- 博客作者的头像，链接到作者主页 -->
+          <a href="{{ url_for('user.index', name=blog.author.name) }}" 
+            target='_blank'><img class='img-rounded profile-thumbnail' 
+            src="{{ blog.author.gravatar(size=70) }}">
+          </a>
+        </div>
+        <div class='col-md-11 col-md'>
+          <h5 class='col-md'>
+            <!-- 博客作者的名字，链接到作者主页 -->
+            <a href="{{ url_for('user.index', name=blog.author.name) }}"
+                target='_blank'>{{ blog.author.name }}</a>
+          </h5>
+          <h5 class='col-md'>
+            <!-- 博客发布时间 -->
+            {{ moment(blog.time_stamp, local=True).fromNow() }}
+          </h5>
+          <h5 class='col-md'>
+            <!-- 博客专属链接 -->
+            {% if not hidebloglink %}
+              <a href="{{ url_for('blog.index', id=blog.id) }}" target='_blank'>
+                <span class="label label-primary">BlogLink</span>
+              </a>
+            {% endif %}
+            <!-- 博客作者的编辑按钮 -->
+            {% if current_user == blog.author %}
+              <a href="{{ url_for('user.edit_blog', id=blog.id) }}" {% if not noblank %}target='_blank'{% endif %}>
+                <span class='label label-success'>Edit</span>
+              </a>    
+            <!-- 管理员的编辑按钮 -->
+            {% elif current_user.is_administrator %}
+              <a href="{{ url_for('user.edit_blog', id=blog.id) }}" {% if not noblank %}target='_blank'{% endif %}>
+                <span class='label label-danger'>AdminEdit</span>
+              </a>    
+            {% else %}
+              <a href=''>&nbsp</a>
+            {% endif %}
+          </h5>
+        </div>
+      </div>
+      <!-- 博客内容展示 -->
+      <div class='post-content'>
+        <!-- 如果存在 HTML 格式的数据，则渲染之
+             Jinja2 会将 HTML 格式的数据转义为普通字符
+             使用 safe 过滤器阻止 Jinja2 的转义以呈现 HTML 样式 -->
+        {% if blog.body_html %}
+          {{ blog.body_html | safe }}
+        {% else %}
+          {{ blog.body }}
+        {% endif %}  
+      </div>
+    </li>
+  {% endfor %}
+</ul>

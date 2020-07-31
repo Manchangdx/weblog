@@ -1,0 +1,11 @@
+<h2>Dear {{ user.name }}, </h2><br>
+<p>Welcome to <b>Weblog</b></p><br>
+<!-- _external=True 要求程序生成完整的 URL -->
+<p>To confirm your account please <a href="{{ url_for('main.confirm_user',
+    token=token, _external=True) }}">click here</a>.<p>
+<p>Alternatively, you can paste the following link 
+    in your browser's address bar: </p>
+<p>{{ url_for('main.confirm_user', token=token, _external=True) }}</p>
+<p>Sincerely,</p>
+<p>The Weblog Team</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>
